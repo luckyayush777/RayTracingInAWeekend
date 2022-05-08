@@ -6,6 +6,7 @@ int main()
 	std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 	for (int j = imageHeight - 1; j >= 0; j--)
 	{
+		std::cerr << "\rScanlines remaining:" << j << ' ' << std::flush;
 		for (int i = 0; i < imageHeight; i++)
 		{
 			auto r = double(i) / (imageWidth - 1);
@@ -18,4 +19,5 @@ int main()
 
 		}
 	}
+	std::cerr << "\nDone. \n";
 }
