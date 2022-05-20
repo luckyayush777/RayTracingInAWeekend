@@ -42,7 +42,7 @@ public :
 		return *this *= 1 / t;
 	}
 
-	double length() const {
+	double Length() const {
 		return sqrt(LengthSquared());	
 	}
 
@@ -60,7 +60,7 @@ public :
 		return Vec3(u.vector[0] + v.vector[0], u.vector[1] + v.vector[1], u.vector[2] + v.vector[2]);
 	}
 
-	friend Vec3 operator+(const Vec3& u, const Vec3& v)
+	friend Vec3 operator-(const Vec3& u, const Vec3& v)
 	{
 		return Vec3(u.vector[0] - v.vector[0], u.vector[1] - v.vector[1], u.vector[2] - v.vector[2]);
 	}
@@ -69,7 +69,29 @@ public :
 	{
 		return Vec3(u.vector[0] * v.vector[0], u.vector[1] * v.vector[1], u.vector[2] * v.vector[2]);
 	}
+
+
 };
+
+inline Vec3 operator*(double t, const Vec3& u)
+{
+	return Vec3(u[0] * t, u[1] * t, u[2] * t);
+}
+
+inline Vec3 operator*( const Vec3& u, double t )
+{
+	return Vec3(u[0] * t, u[1] * t, u[2] * t);
+}
+
+inline Vec3 operator/(Vec3 v, double t)
+{
+	return (1 / t) * v;
+}
+
+inline Vec3 UnitVector(Vec3 v)
+{
+	return v / v.Length();
+}
 
 using Point3 = Vec3;
 using Color = Vec3;	
