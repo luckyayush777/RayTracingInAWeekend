@@ -2,14 +2,40 @@
 #include"vec3.h"
 #include"Color.h"
 #include"Ray.h"
-Color RayColor(const Ray& ray
-)
+#pragma once
+double HitSphere(const Point3& centre, double radius, const Ray& ray);
+
+double HitSphere(const Point3& centre, double radius, const Ray& ray)
 {
-	Vec3 unitDirection = UnitVector(ray.Direction());
-	auto t = 0.5 * (unitDirection.Y() + 1.0);
-	return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+	Vec3 oc = ray.Origin() - centre;
+	auto a = ray.Direction().LengthSquared();
+
+	auto a = Dot(ray.Direction(), ray.Direction());
+	auto b = 2.0 * Dot(oc, ray.Direction());
+	auto c = Dot(oc, oc) - radius * radius;
+	auto discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+	{
+		return -1.0;
+	}
+	else {
+		return (-b - sqrt(discriminant)) / (2.0 * a);
+	}
 }
 
+Color RayColor(const Ray& ray)
+{
+	auto t = HitSphere(Point3(0, 0, -1), 0.5, ray);
+	if (t > 0.0)
+	{
+		Vec3 normal = UnitVector(ray.PointAt(t) - Point3(0, 0, -1));
+		return 0.5 * Color(normal.X() + 1, normal.Y() + 1, normal.Z() + 1);
+	}
+
+	Vec3 unitDirection = UnitVector(ray.Direction());
+	t = 0.5 * (unitDirection.Y() + 1);
+	return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+}
 
 int main()
 {

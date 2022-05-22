@@ -55,15 +55,9 @@ public :
 		return out;
 	}
 
-	friend Vec3 operator+(const Vec3& u, const Vec3& v)
-	{
-		return Vec3(u.vector[0] + v.vector[0], u.vector[1] + v.vector[1], u.vector[2] + v.vector[2]);
-	}
+	
 
-	friend Vec3 operator-(const Vec3& u, const Vec3& v)
-	{
-		return Vec3(u.vector[0] - v.vector[0], u.vector[1] - v.vector[1], u.vector[2] - v.vector[2]);
-	}
+	
 
 	friend Vec3 operator*(const Vec3& u, const Vec3& v)
 	{
@@ -72,6 +66,17 @@ public :
 
 
 };
+using Point3 = Vec3;
+using Color = Vec3;
+inline Vec3 operator+(const Vec3& u,const Vec3& v)
+{
+	return Vec3(u.vector[0] + v.vector[0], u.vector[1] + v.vector[1], u.vector[2] + v.vector[2]);
+}
+
+inline Vec3 operator-(const Vec3& u, const Vec3& v)
+{
+	return Vec3(u.vector[0] - v.vector[0], u.vector[1] - v.vector[1], u.vector[2] - v.vector[2]);
+}
 
 inline Vec3 operator*(double t, const Vec3& u)
 {
@@ -93,5 +98,16 @@ inline Vec3 UnitVector(Vec3 v)
 	return v / v.Length();
 }
 
-using Point3 = Vec3;
-using Color = Vec3;	
+inline double Dot(const Vec3& u, const Vec3& v) {
+	return u.vector[0] * v.vector[0]
+		+ u.vector[1] * v.vector[1]
+		+ u.vector[2] * v.vector[2];
+}
+
+inline Vec3 Cross(const Vec3& u, const Vec3& v) {
+	return Vec3(u.vector[1] * v.vector[2] - u.vector[2] * v.vector[1],
+		u.vector[2] * v.vector[0] - u.vector[0] * v.vector[2],
+		u.vector[0] * v.vector[1] - u.vector[1] * v.vector[0]);
+}
+
+
