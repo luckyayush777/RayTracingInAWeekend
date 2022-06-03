@@ -1,10 +1,19 @@
 #pragma once
 #include<iostream>
 #include"vec3.h"
-
-void WriteColor(std::ostream& out, Color pixelColor)
+#include"RTWeekend.h"
+void WriteColor(std::ostream& out, Color pixelColor, int samplesPerPixel)
 {
-	out << static_cast<int>(255.99 * pixelColor.X()) << ' '
-		<< static_cast<int>(255.99 * pixelColor.Y()) << ' '
-		<< static_cast<int>(255.99 * pixelColor.Z()) << '\n';
+	auto red = pixelColor.X();
+	auto green = pixelColor.Y();
+	auto blue = pixelColor.Z();
+
+	auto scale = 1.0 / samplesPerPixel;
+	red *= scale;
+	green *= scale;
+	blue *= scale;
+	
+	out << static_cast<int>(256 * Personal::Clamp(red, 0.0, 0.999)) << ' '
+		<< static_cast<int>(256 * Personal::Clamp(green, 0.0, 0.999)) << ' '
+		<< static_cast<int>(256 * Personal::Clamp(blue, 0.0, 0.999)) << '\n';
 }
