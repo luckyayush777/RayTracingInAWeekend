@@ -1,39 +1,20 @@
-#include<iostream>
-#include"vec3.h"
-#include"Color.h"
-#include"Ray.h"
 #pragma once
-double HitSphere(const Point3& centre, double radius, const Ray& ray);
+#include"RTWeekend.h"
+#include"Color.h"
+#include"HittableList.h"
+#include"Sphere.h"
+#include<iostream>
 
-double HitSphere(const Point3& centre, double radius, const Ray& ray)
+
+Color RayColor(const Ray& ray, const Hittable& world)
 {
-	Vec3 oc = ray.Origin() - centre;
-	auto a = ray.Direction().LengthSquared();
-
-	auto a = Dot(ray.Direction(), ray.Direction());
-	auto b = 2.0 * Dot(oc, ray.Direction());
-	auto c = Dot(oc, oc) - radius * radius;
-	auto discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
+	HitRecord record;
+	if (world.Hit(ray, 0, Personal::AYUSH_INFINITY, record))
 	{
-		return -1.0;
+		return 0.5 * (record.normal + Color(1, 1, 1));
 	}
-	else {
-		return (-b - sqrt(discriminant)) / (2.0 * a);
-	}
-}
-
-Color RayColor(const Ray& ray)
-{
-	auto t = HitSphere(Point3(0, 0, -1), 0.5, ray);
-	if (t > 0.0)
-	{
-		Vec3 normal = UnitVector(ray.PointAt(t) - Point3(0, 0, -1));
-		return 0.5 * Color(normal.X() + 1, normal.Y() + 1, normal.Z() + 1);
-	}
-
 	Vec3 unitDirection = UnitVector(ray.Direction());
-	t = 0.5 * (unitDirection.Y() + 1);
+	auto t = 0.5 * (unitDirection.Y() + 1.0);
 	return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
@@ -43,6 +24,12 @@ int main()
 	const auto aspectRatio = 16.0 / 9.0;
 	const int imageWidth = 400;
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
+
+	//WORLD
+	HittableList world;
+	world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+	world.Add(make_shared<Sphere>(Point3(1, 0, 1), 100));
+	world.Add(make_shared<Sphere>(Point3(0, -100.5, 1), 100));
 
 	//CAMERA
 	auto viewportHeight = 2.0;
@@ -66,7 +53,7 @@ int main()
 			auto u = double(i) / (imageWidth - 1);
 			auto v = double(j) / (imageHeight - 1);
 			Ray ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-			Color pixelColor = RayColor(ray);
+			Color pixelColor = RayColor(ray, world);
 			WriteColor(std::cout, pixelColor);
 
 		}
