@@ -7,12 +7,15 @@
 #include<iostream>
 
 
-Color RayColor(const Ray& ray, const Hittable& world)
+Color RayColor(const Ray& ray, const Hittable& world, int depth)
 {
 	HitRecord record;
-	if (world.Hit(ray, 0, Personal::AYUSH_INFINITY, record))
+	if (depth <= 0)
+		return Color(0, 0, 0);
+	if (world.Hit(ray, 0.001, Personal::AYUSH_INFINITY, record))
 	{
-		return 0.5 * (record.normal + Color(1, 1, 1));
+		Point3 target = record.point + record.normal + RandomUnitVector();
+		return 0.5 * RayColor(Ray(record.point, target - record.point), world, depth - 1);
 	}
 	Vec3 unitDirection = UnitVector(ray.Direction());
 	auto t = 0.5 * (unitDirection.Y() + 1.0);
@@ -26,13 +29,14 @@ int main()
 	const int imageWidth = 400;
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 	const int samplesPerPixel = 100;
+	const int maxDepth = 50;
 
 	//WORLD
 	HittableList world;
 	world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
 	world.Add(make_shared<Sphere>(Point3(0, -100.5, 1), 100));
 
-	//CAMERA
+	//CAMERAs
 	Camera cam;
 
 	//RENDER
@@ -50,7 +54,7 @@ int main()
 				auto u = (i + Personal::RandomDouble()) / (imageWidth - 1);
 				auto v = (j + Personal::RandomDouble()) / (imageHeight - 1);
 				Ray ray = cam.GetRay(u, v);
-				pixelColor += RayColor(ray, world);
+				pixelColor += RayColor(ray, world, maxDepth);
 			}
 			WriteColor(std::cout, pixelColor, samplesPerPixel);
 

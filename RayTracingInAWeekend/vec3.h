@@ -1,7 +1,7 @@
 #pragma once
 #include<cmath>
 #include<iostream>
-
+#include"RTWeekend.h"
 using std::sqrt;
 
 class Vec3 {
@@ -108,6 +108,31 @@ inline Vec3 Cross(const Vec3& u, const Vec3& v) {
 	return Vec3(u.vector[1] * v.vector[2] - u.vector[2] * v.vector[1],
 		u.vector[2] * v.vector[0] - u.vector[0] * v.vector[2],
 		u.vector[0] * v.vector[1] - u.vector[1] * v.vector[0]);
+}
+
+inline static Vec3 Random()
+{
+	return Vec3(Personal::RandomDouble(), Personal::RandomDouble(), Personal::RandomDouble());
+}
+
+inline static Vec3 Random(double min, double max)
+{
+	return Vec3(Personal::RandomDouble(min, max), Personal::RandomDouble(min, max), Personal::RandomDouble(min, max));
+}
+
+static Vec3 RandomInUnitSphere()
+{
+	while (true)
+	{
+		auto p = Random(-1, 1);
+		if (p.LengthSquared() >= 1) continue;
+		return p;
+	}
+}
+
+static Vec3 RandomUnitVector()
+{
+	return UnitVector(RandomInUnitSphere());
 }
 
 

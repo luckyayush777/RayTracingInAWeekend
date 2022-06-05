@@ -9,9 +9,9 @@ void WriteColor(std::ostream& out, Color pixelColor, int samplesPerPixel)
 	auto blue = pixelColor.Z();
 
 	auto scale = 1.0 / samplesPerPixel;
-	red *= scale;
-	green *= scale;
-	blue *= scale;
+	red = sqrt(scale * red);
+	green = sqrt(scale * green);
+	blue = sqrt(scale * blue);
 	
 	out << static_cast<int>(256 * Personal::Clamp(red, 0.0, 0.999)) << ' '
 		<< static_cast<int>(256 * Personal::Clamp(green, 0.0, 0.999)) << ' '
