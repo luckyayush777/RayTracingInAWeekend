@@ -55,7 +55,7 @@ public :
 		
 		bool cannotRefract = refractionRatio * sinTheta > 1.0;
 		Vec3 direction;
-		if (cannotRefract || Reflectance(cosTheta, refractionRatio > Personal::RandomDouble()))
+		if (cannotRefract || Reflectance(cosTheta, refractionRatio) > Personal::RandomDouble())
 			direction = Reflect(unitDirection, record.normal);
 		else
 			direction = Refract(unitDirection, record.normal, refractionRatio);

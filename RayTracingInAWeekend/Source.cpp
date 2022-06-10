@@ -35,24 +35,26 @@ int main()
 	const int maxDepth = 50;
 
 	//WORLD
+	auto R = cos(Personal::PI / 4);
 	HittableList world;
 
-	auto materialGround = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-	auto materialCenter = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
-	auto materialLeft = std::make_shared<Dielectric>(1.5);
-	auto materialRight = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
+	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+	auto materialCentre = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+	auto materialLeft = make_shared<Dielectric>(1.5);
+	auto materialRight = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
 
-	world.Add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, materialGround));
-	world.Add(make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, materialCenter));
-	world.Add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
-	world.Add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), -0.4, materialLeft));
+	world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, materialGround));
+	world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, materialCentre));
+	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
+	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), -0.45, materialLeft	));
+	world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, materialRight));
 
-	world.Add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, materialRight));
+
 
 
 
 	//CAMERAs
-	Camera cam;
+	Camera cam(Point3(-2, 2, 1), Point3(0 , 0, -1), Vec3(0, 1, 0), 20, aspectRatio);
 
 	//RENDER
 

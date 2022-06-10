@@ -14,7 +14,7 @@ namespace Personal {
 
     // Utility Functions
 
-    inline double degrees_to_radians(double degrees) {
+    inline double DegToRad(double degrees) {
         return degrees * PI / 180.0;
     }
 
