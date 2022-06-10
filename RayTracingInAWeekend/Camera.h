@@ -10,6 +10,7 @@ private:
 public:
 	Camera()
 	{
+		double verticalFOV;
 		auto aspectRatio = 16.0 / 9.0;
 		auto viewPortHeight = 2.0;
 		auto viewPortWidth = aspectRatio * viewPortHeight;
