@@ -55,7 +55,10 @@ public :
 		return out;
 	}
 
-	
+	bool NearZero() const {
+		const auto s = 1e-8;
+		return (fabs(vector[0]) < s) && (fabs(vector[1]) < s) && (fabs(vector[2]) < s);
+	}
 
 	
 
@@ -133,6 +136,11 @@ static Vec3 RandomInUnitSphere()
 static Vec3 RandomUnitVector()
 {
 	return UnitVector(RandomInUnitSphere());
+}
+
+static Vec3 Reflect(const Vec3& v, const Vec3& n)
+{
+	return v - 2 * Dot(v, n) * n;
 }
 
 

@@ -7,10 +7,6 @@
 namespace Personal {
     // Usings
 
-    using std::shared_ptr;
-    using std::make_shared;
-    using std::sqrt;
-
     // Constants
 
     const double AYUSH_INFINITY = std::numeric_limits<double>::infinity();
