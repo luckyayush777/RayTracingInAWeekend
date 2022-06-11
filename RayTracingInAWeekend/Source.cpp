@@ -25,36 +25,84 @@ Color RayColor(const Ray& ray, const Hittable& world, int depth)
 	return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
+HittableList RandomScene()
+{
+	HittableList world;
+	auto groundMaterial = std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
+	world.Add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, groundMaterial));
+
+	for (int a = -11; a < 11; a++)
+	{
+		for (int b = -11; b < 11; b++)
+		{
+			auto chooseMat = Personal::RandomDouble();
+			Point3 center(a + 0.9 * Personal::RandomDouble(), 0.2, b + 0.9 * Personal::RandomDouble());
+
+			if ((center - Point3(4, 0.2, 0)).Length() > 0.9)
+			{
+				std::shared_ptr<Material> sphereMaterial;
+
+				if (chooseMat < 0.8)
+				{
+					//DIFFUSE
+					auto albedo = Random() * Random();
+					sphereMaterial = std::make_shared<Lambertian>(albedo);
+					world.Add(std::make_shared<Sphere>(center, 0.2, sphereMaterial));
+				} 
+				else if (chooseMat < 0.95)
+				{
+					auto albedo = Random(0.5, 1);
+					auto fuzz = Personal::RandomDouble(0, 0.5);
+					sphereMaterial = std::make_shared<Metal>(albedo, fuzz);
+					world.Add(std::make_shared<Sphere>(center, 0.2, sphereMaterial));
+				}
+				else
+				{
+					sphereMaterial = std::make_shared<Dielectric>(1.5);
+					world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
+				}
+			}
+		}
+	}
+
+	auto material1 = std::make_shared<Dielectric>(1.5);
+	world.Add(std::make_shared<Sphere>(Point3(0, 1, 0), 1.0, material1));
+
+	auto material2 = std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
+	world.Add(std::make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
+
+	auto material3 = std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
+	world.Add(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+
+	return world;
+
+
+
+}
+
 int main()
 {
 	//IMAGE
-	const auto aspectRatio = 16.0 / 9.0;
-	const int imageWidth = 400;
+	const auto aspectRatio = 3.0 / 2.0;
+	const int imageWidth = 1200;
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
-	const int samplesPerPixel = 100;
+	const int samplesPerPixel = 500;
 	const int maxDepth = 50;
 
 	//WORLD
-	auto R = cos(Personal::PI / 4);
-	HittableList world;
-
-	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-	auto materialCentre = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
-	auto materialLeft = make_shared<Dielectric>(1.5);
-	auto materialRight = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
-
-	world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, materialGround));
-	world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, materialCentre));
-	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
-	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), -0.45, materialLeft	));
-	world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, materialRight));
+	auto world = RandomScene();
 
 
 
 
 
 	//CAMERAs
-	Camera cam(Point3(-2, 2, 1), Point3(0 , 0, -1), Vec3(0, 1, 0), 20, aspectRatio);
+	Point3 lookFrom(13, 2, 3);
+	Point3 lookAt(0, 0, 0);
+	Vec3 vUp(0, 1, 0);
+	auto distToFocus = 10.0;
+	auto aperture = 0.1;
+	Camera cam(lookFrom, lookAt, vUp, 20, aspectRatio, aperture, distToFocus);
 
 	//RENDER
 

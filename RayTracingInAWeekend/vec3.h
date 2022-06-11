@@ -151,4 +151,15 @@ static Vec3 Refract(const Vec3& uv, const Vec3& n, double etaOverEtaPrime)
 	return rOutPerp + rOutParallel;
 }
 
+static Vec3 RandomInUnitDisk()
+{
+	while (true)
+	{
+		auto p = Vec3(Personal::RandomDouble(-1, 1), Personal::RandomDouble(-1, 1), 0);
+		if (p.LengthSquared() >= 1)
+			continue;
+		return p;
+	}
+}
+
 

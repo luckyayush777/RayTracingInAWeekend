@@ -17,3 +17,4 @@ void WriteColor(std::ostream& out, Color pixelColor, int samplesPerPixel)
 		<< static_cast<int>(256 * Personal::Clamp(green, 0.0, 0.999)) << ' '
 		<< static_cast<int>(256 * Personal::Clamp(blue, 0.0, 0.999)) << '\n';
 }
+
